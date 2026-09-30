@@ -126,3 +126,105 @@ Como línea base se utilizó un clasificador de referencia, posteriormente compa
 Sin embargo, la evaluación también confirmó que un buen valor de F1 macro no elimina completamente los errores. La clase spam representa un desafío especialmente importante, ya que los falsos negativos pueden provocar que determinados mensajes no deseados sean clasificados como legítimos. En un contexto real, este tipo de error puede permitir que contenidos publicitarios, engañosos o no solicitados lleguen al usuario. Por esta razón, se realizó un análisis específico de los casos mal clasificados, superando el mínimo solicitado de veinte observaciones y organizando los errores en categorías interpretables. Este análisis permitió reconocer que factores como textos breves, expresiones ambiguas, vocabulario poco frecuente y similitudes lingüísticas entre mensajes pueden afectar la decisión del clasificador.
 La aplicación desarrollada en Streamlit permitió comprobar que el modelo guardado puede reutilizarse fuera del proceso de entrenamiento. Durante la validación local, la aplicación recibió textos nuevos y generó correctamente una clase predicha, mostrando además una advertencia para recordar que la salida debe interpretarse dentro del dominio y de las limitaciones del dataset. Esto es relevante porque una predicción automática no debe presentarse como una verdad absoluta, sino como el resultado de un modelo condicionado por los ejemplos y características disponibles durante su entrenamiento.
 Entre las principales limitaciones se encuentran el dominio específico del corpus, su idioma, el contexto temporal de los mensajes y la posibilidad de encontrar expresiones diferentes en datos futuros. Por ello, antes de utilizar el sistema en un entorno real sería necesario validarlo con datos recientes, revisar periódicamente los errores, comprobar posibles cambios en el lenguaje y evaluar nuevamente las métricas por clase. En conclusión, el laboratorio permitió construir un pipeline reproducible y funcional, demostrando que el análisis responsable de los resultados es tan importante como el entrenamiento del modelo.
+
+## Experimento de parámetros Word2Vec - LAB06
+
+Para analizar el efecto del tamaño de la ventana contextual en los embeddings,
+se realizaron dos ejecuciones controladas sobre el mismo corpus SMS Spam
+Collection, modificando únicamente el parámetro `window` del modelo Word2Vec.
+
+### Experimento A: window = 5
+
+- Palabra evaluada: `free`
+- Tamaño del vocabulario: 8713
+- Cobertura: 1.0
+- Vecinos observados: `nokia`, `messages`, `unlimited`, `reply`, `24hrs`,
+  `87131`, `phd`, `svc`, `bluetooth` y `barkleys`.
+
+### Experimento B: window = 2
+
+- Palabra evaluada: `free`
+- Tamaño del vocabulario: 8713
+- Cobertura: 1.0
+- Vecinos observados: `backdoor`, `chik`, `calls`, `1st`, `08000776320`,
+  `auction`, `camera`, `inclusive`, `date` y `poly`.
+
+### Interpretación
+
+La modificación del tamaño de la ventana no alteró el tamaño del vocabulario
+ni la cobertura del corpus, que permanecieron en 8713 términos y 1.0,
+respectivamente. Sin embargo, produjo cambios claros en las palabras
+consideradas próximas a `free`.
+
+Con `window=5`, Word2Vec utiliza un contexto más amplio y captura relaciones
+de coocurrencia a mayor distancia dentro de los mensajes. Con `window=2`,
+el modelo se concentra en términos situados más cerca de la palabra objetivo,
+por lo que las relaciones aprendidas cambian.
+
+Este resultado demuestra que la similitud obtenida por un embedding depende
+de la configuración del modelo y del contexto disponible en el corpus. Por
+tanto, una similitud alta no debe interpretarse automáticamente como
+sinonimia ni como equivalencia semántica universal.
+
+Para la configuración final del proyecto se mantuvo `window=5`, dejando
+documentado el experimento alternativo con `window=2`.
+
+## Cierre interpretativo LAB06
+
+### Resultado de embeddings
+El modelo Word2Vec entrenado sobre el corpus SMS Spam Collection generó un
+vocabulario de 8,713 términos y permitió analizar relaciones de proximidad
+contextual entre palabras. Para la palabra `free`, la configuración final
+con `window=5` produjo vecinos como `nokia`, `messages`, `unlimited`,
+`reply`, `24hrs`, `87131`, `phd`, `svc`, `bluetooth` y `barkleys`.
+Estos resultados reflejan patrones de coocurrencia propios del corpus y no
+deben interpretarse como relaciones semánticas universales.
+
+### Evidencia de cobertura
+La cobertura obtenida fue de 1.0, lo que indica que los tokens considerados
+durante la evaluación estuvieron representados en el vocabulario aprendido
+por el modelo. Además, el experimento comparativo entre `window=5` y
+`window=2` mantuvo el mismo vocabulario y cobertura, aunque modificó las
+palabras consideradas más cercanas a `free`. Esto evidencia que los
+parámetros del modelo afectan la estructura de similitud aprendida.
+
+### Resultado estructural de la red
+Para el análisis de redes se utilizó la red de demostración del club de
+karate de Zachary, tal como establece la práctica. El procesamiento generó
+los archivos `centralities.csv`, `network.png` y
+`social_network.graphml`, permitiendo representar los nodos, las aristas,
+las comunidades y distintas medidas de centralidad. La red constituye una
+demostración reproducible de análisis estructural y no representa
+directamente las relaciones existentes en el corpus de mensajes SMS.
+
+### Dos métricas comparadas
+Se consideraron especialmente la centralidad de grado y la centralidad de
+intermediación. La centralidad de grado permite identificar nodos con una
+mayor proporción de conexiones directas, mientras que la intermediación
+permite reconocer nodos que aparecen con frecuencia en los caminos mínimos
+entre diferentes partes de la red. Estas métricas describen propiedades
+estructurales distintas y, por tanto, un nodo puede presentar un valor alto
+en una de ellas sin necesariamente ocupar la misma posición en la otra.
+
+### Interpretación permitida
+Es válido afirmar que determinados nodos poseen más conexiones directas,
+actúan como puentes estructurales o se encuentran en posiciones relevantes
+según una métrica específica. También es posible describir las comunidades
+detectadas como agrupaciones producidas por el algoritmo sobre la red
+analizada.
+
+### Interpretación que NO puede sostenerse
+No puede concluirse que un nodo sea la “persona más influyente” únicamente
+porque presente mayor centralidad. Tampoco puede interpretarse una comunidad
+detectada como una identidad social definitiva ni asumir que la similitud
+entre embeddings representa amistad, intención o equivalencia semántica.
+Las conclusiones deben limitarse a las propiedades observadas en los datos
+y a las métricas utilizadas.
+
+### Siguiente experimento
+Como siguiente paso sería conveniente evaluar los embeddings con otras
+palabras frecuentes del corpus y comparar nuevas configuraciones de
+`window` o `min_count`. También podría analizarse una red real y
+debidamente anonimizada, documentando claramente qué representan los nodos,
+las aristas, el periodo de observación, la dirección de las relaciones y
+las consideraciones de privacidad y consentimiento.
