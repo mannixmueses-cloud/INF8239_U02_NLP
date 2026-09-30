@@ -41,7 +41,7 @@ Clasificar mensajes SMS en inglés como legítimos (ham) o spam, con fines acad�
 ## 6\. Transformaciones realizadas
 
 * El original SMSSpamCollection (una línea por mensaje: clase, tabulador, texto) se convirtió con pandas a data/raw/dataset.csv con columnas label y text.
-* No se eliminaron duplicados ni se modificó ningún texto. El archivo original no se editó.
+* \- data/raw/dataset.csv conserva los duplicados. Para el modelado, scripts/prepare\_data.py genera data/processed/dataset\_dedup.csv eliminando 403 textos duplicados (5171 filas, ham 87.4 % y spam 12.6 %). SHA-256 de dataset\_dedup.csv: 04a1f6fb414aaba75db7061829cb8f1fdf071f98bf44490f4c284bd84bf93469. No se modificó ningún texto y el archivo original no se editó.
 
 ## 7\. Sesgos, población no cubierta y usos prohibidos
 

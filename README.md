@@ -98,3 +98,24 @@ Debe imprimir `(5574, 2)`. Si aparece un error de codificación, agregar `encodi
 - Algunos mensajes contienen números de teléfono: no publicar ejemplos con números reales.
 - El corpus está desbalanceado (13.4 % spam) y tiene 403 copias duplicadas: eliminar duplicados antes de dividir en entrenamiento y prueba.
 - `accuracy` sola puede engañar; evaluar con precisión, recall y F1 de la clase `spam`.
+
+
+## Reproducir el experimento (LAB04 + LAB05)
+
+1. Obtener el corpus como se explica en "Corpus utilizado" (deja `data/raw/SMSSpamCollection`).
+2. Preparar los datos: `uv run python scripts/prepare_data.py`. Crea `data/raw/dataset.csv` y `data/processed/dataset_dedup.csv`, este último sin textos duplicados (5171 filas).
+3. En `.env` usar `DATASET_PATH=data/processed/dataset_dedup.csv`. Esta ruta reemplaza a la del apartado anterior.
+4. Auditar: `uv run python scripts/audit_data.py` (debe mostrar 0 duplicados).
+5. Entrenar y evaluar: `uv run python scripts/train_text.py` (baseline, Complement Naive Bayes y regresión logística, con partición estratificada y semilla 42).
+6. Categorizar los errores: `uv run python scripts/categorize_errors.py`. Requiere el paso 5 y guarda `reports/error_analysis_categorizado.csv` con los números de teléfono enmascarados.
+7. Pruebas: `uv run pytest -q`.
+
+### Resultados
+
+| Modelo | F1 macro | Recall de spam |
+|---|---|---|
+| Baseline (DummyClassifier) | 0.466 | 0.00 |
+| Complement Naive Bayes | 0.926 | 0.80 |
+| Regresión logística | 0.956 | 0.93 |
+
+Limitaciones: un solo corte de entrenamiento y prueba, sin intervalos de confianza; puede haber mensajes casi duplicados entre ambos conjuntos; el corpus solo cubre SMS en inglés de las fuentes indicadas en `docs/DATASET_CARD.md`.
