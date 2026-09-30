@@ -1,0 +1,23 @@
+﻿Ruta: data/raw/dataset.csv
+SHA-256: c9ca2be9b60921499e30de05a0350c9bee1ba7cfc98bc03d1547819938a022d0
+Filas y columnas: (5574, 2)
+Nulos:
+ text     0
+label    0
+dtype: int64
+Duplicados de texto: 403
+Distribuci≤n:
+ label
+ham     0.865985
+spam    0.134015
+Name: proportion, dtype: float64
+Longitud de textos:
+ count    5574.000000
+mean       80.478292
+std        59.848302
+min         2.000000
+50%        62.000000
+90%       156.000000
+99%       276.000000
+max       910.000000
+Name: text, dtype: float64
