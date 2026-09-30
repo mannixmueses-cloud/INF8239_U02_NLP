@@ -57,15 +57,15 @@ Aprobado frente a Turkish Spam V01 (826 filas, correos de cuentas personales, me
 
 ## **9. Cierre interpretativo**
 
-\- Resultado principal: el corpus tiene 5574 mensajes, sin nulos, con 403 copias duplicadas y 13.4 % de spam.
+\- Resultado principal: revisé el corpus SMS Spam Collection y lo encontré utilizable. Tiene 5574 mensajes en dos columnas (label y text), no tiene datos vacíos y solo el 13.4 % son spam; el resto son mensajes normales. Lo que más me llamó la atención es que hay 403 mensajes repetidos.
 
-\- Evidencia de calidad y procedencia: hash SHA-256 del original y del CSV convertido, licencia CC BY 4.0, salida de audit\_data.py y 3 pruebas del contrato aprobadas.
+\- Evidencia de calidad y procedencia: sé de dónde viene porque guardé el enlace oficial de UCI, el DOI y la licencia CC BY 4.0, que permite usarlo y publicar resultados dando el crédito. Guardé la huella SHA-256 del archivo original y la del CSV convertido, para poder demostrar que no cambió. También corrí la auditoría (audit\_data.py) y las 3 pruebas del contrato de datos, que pasaron.
 
-\- Riesgo o sesgo identificado: desbalance de clases, origen limitado (Singapur y Reino Unido) y números de teléfono dentro de algunos textos.
+\- Riesgo o sesgo identificado: los mensajes normales vienen sobre todo de estudiantes de Singapur y el spam de un foro del Reino Unido, así que el corpus no representa a todos los usuarios. Además, algunos mensajes traen números de teléfono, por lo que no debo publicar ejemplos con números reales. Y como hay muchos más mensajes normales que spam, el conjunto está desbalanceado.
 
-\- Decisión de aprobación o rechazo: aprobado; Turkish Spam V01 rechazado por tamaño y riesgo de privacidad.
+\- Decisión de aprobación o rechazo: aprobé SMS Spam Collection porque tiene licencia clara, suficientes mensajes (5574) y una procedencia documentada. Rechacé Turkish Spam V01 porque solo tiene 826 filas y sus correos vienen de cuentas personales, lo que aumenta el riesgo de privacidad.
 
-\- Limitación que debe comunicarse: los resultados aplican a SMS en inglés de estas fuentes y accuracy sola no es una medida confiable.
+\- Limitación que debe comunicarse: los resultados solo valen para mensajes SMS en inglés de estas fuentes, no para todo el spam. Además, con tantos mensajes normales, un modelo que dijera siempre "no es spam" acertaría cerca del 87 % sin detectar nada, así que la exactitud (accuracy) sola no es una buena medida.
 
-\- Siguiente verificación: eliminar duplicados antes de dividir los datos en el LAB05 y evaluar con precisión, recall y F1 de spam.
+\- Siguiente verificación: antes de entrenar el modelo en el LAB05, voy a eliminar los mensajes duplicados para que el mismo texto no quede a la vez en entrenamiento y en prueba, porque eso haría que el modelo pareciera mejor de lo que es. También voy a evaluar con precisión, recall y F1 de la clase spam, y no solo con accuracy.
 
